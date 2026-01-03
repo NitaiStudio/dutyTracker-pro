@@ -1,0 +1,17 @@
+{
+  "name": "Duty Tracker Pro",
+  "short_name": "DutyPro",
+  "description": "Professional Duty and Salary tracking tool by Nitai Studio.",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#6750a4",
+  "theme_color": "#6750a4",
+  "icons": [
+    {
+      "src": "https://i.ibb.co/k2QG26wB/20251218-184702.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
