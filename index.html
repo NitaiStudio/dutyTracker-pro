@@ -4,70 +4,55 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#6750a4">
+    <meta name="description" content="Professional Duty Tracker Pro by Nitai Studio.">
     <title>Duty Tracker Pro</title>
 
-    <!-- PWA Single File Master Setup -->
-    <link id="pwa-manifest" rel="manifest">
+    <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="icon" href="https://i.ibb.co/k2QG26wB/20251218-184702.png">
 
     <!-- Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
 
-    <!-- Firebase SDK (Compat) -->
+    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
     <style>
-        :root {
-            --primary: #6750a4;
-            --on-primary: #ffffff;
-            --surface: #ffffff;
-            --bg: #fef7ff;
-            --primary-container: #eaddff;
-        }
-
+        :root { --primary: #6750a4; --surface: #ffffff; --bg: #fef7ff; --primary-container: #eaddff; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Google Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background: var(--bg); color: #1c1b1f; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
 
-        /* --- SPLASH SCREEN (PERFECT CENTER) --- */
+        /* --- SPLASH SCREEN (FIXED PERFECT CENTER) --- */
         #splash { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: linear-gradient(135deg, #6750a4, #311b92); 
-            z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: space-between; color: white; transition: 0.6s ease-in-out;
+            z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; transition: 0.6s;
         }
-        .splash-mid { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .splash-icon { font-size: 85px !important; animation: pulse 2.2s infinite; }
-        .loader-ring { width: 45px; height: 45px; border: 4px solid rgba(255,255,255,0.2); border-top-color: white; border-radius: 50%; animation: spin 1s linear infinite; margin-top: 25px; }
-        .splash-footer { padding-bottom: 40px; text-align: center; }
+        .splash-content { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+        .splash-logo { width: 110px; height: 110px; border-radius: 24px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); animation: pulse 2.2s infinite; }
+        .loader-ring { width: 45px; height: 45px; border: 4px solid rgba(255,255,255,0.2); border-top-color: white; border-radius: 50%; animation: spin 1s linear infinite; margin-top: 20px; }
+        .splash-footer { position: absolute; bottom: 40px; text-align: center; width: 100%; }
         .nitai-studio { font-weight: bold; color: #ffd700; font-size: 18px; text-transform: uppercase; margin-top: 5px; }
-        .flag-img { width: 26px; border-radius: 2px; animation: flagWave 2.5s infinite; vertical-align: middle; margin-left: 5px; }
 
-        @keyframes flagWave { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
         @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
         @keyframes spin { to { transform: rotate(360deg); } }
-
-        /* --- HARD LOCK SCREEN --- */
-        #lock-screen { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: #fff; z-index: 9500; display: none; flex-direction: column; padding: 30px; text-align: center; justify-content: center;
-        }
-        .lock-card { background: linear-gradient(135deg, #21005d, #6750a4); color: white; padding: 35px; border-radius: 32px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        @keyframes flagWave { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
 
         /* --- UI COMPONENTS --- */
-        header { background: var(--surface); padding: 12px 16px; border-bottom: 1px solid rgba(0,0,0,0.05); z-index: 10; }
+        #auth-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 9000; display: none; align-items: center; justify-content: center; }
+        #lock-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #fff; z-index: 9500; display: none; flex-direction: column; padding: 30px; text-align: center; justify-content: center; }
+        
+        header { background: var(--surface); padding: 12px 16px; border-bottom: 1px solid rgba(0,0,0,0.05); }
         .app-bar { display: flex; align-items: center; justify-content: space-between; height: 56px; }
-        .app-title { font-size: 20px; font-weight: 700; color: #1c1b1f; }
-        .month-selector { display: flex; align-items: center; justify-content: space-between; background: var(--primary-container); padding: 8px 16px; border-radius: 16px; margin-top: 10px; }
+        .month-selector { display: flex; align-items: center; justify-content: space-between; background: #eaddff; padding: 10px 18px; border-radius: 18px; margin-top: 10px; }
         .nav-icon { color: var(--primary); cursor: pointer; font-size: 28px !important; }
 
-        #calendar-grid { flex: 1; overflow-y: auto; padding: 12px; display: grid; grid-template-columns: repeat(7, 1fr); grid-auto-rows: minmax(95px, 1fr); gap: 8px; }
-        .day-card { background: var(--surface); border-radius: 16px; padding: 6px; display: flex; flex-direction: column; align-items: center; border: 1px solid #f0f0f0; transition: 0.2s; position: relative; }
-        .day-card.today { border: 2px solid var(--primary); background: #f3efff; }
+        #calendar-grid { flex: 1; overflow-y: auto; padding: 12px; display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+        .day-card { background: var(--surface); border-radius: 16px; padding: 6px; display: flex; flex-direction: column; align-items: center; border: 1px solid #f0f0f0; min-height: 95px; }
+        .day-card.today { border: 2px solid var(--primary); }
 
-        /* Status Colors */
         .st-Present { background: #e8f5e9 !important; color: #2e7d32 !important; }
         .st-Leave { background: #ffebee !important; color: #c62828 !important; }
         .st-Sick { background: #fff3e0 !important; color: #ef6c00 !important; }
@@ -75,76 +60,71 @@
         .st-Off { background: #eceff1 !important; color: #455a64 !important; }
         .ot-tag { font-size: 9px; background: #333; color: white; padding: 1px 5px; border-radius: 4px; margin-top: auto; font-weight: bold; }
 
-        /* --- PAGES --- */
-        .page { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 100; transform: translateX(100%); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; }
+        .page { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 100; transform: translateX(100%); transition: 0.4s; display: flex; flex-direction: column; }
         .page.open { transform: translateX(0); }
         .card { background: white; border-radius: 24px; padding: 20px; margin: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
-        .btn-primary { background: var(--primary); color: white; border: none; padding: 16px; border-radius: 16px; font-size: 16px; font-weight: bold; width: 100%; cursor: pointer; }
-
-        /* --- PLAN BUTTONS --- */
-        .plan-box { background: #f3efff; padding: 15px; border-radius: 18px; margin-bottom: 12px; border: 1px solid #e1d5ff; display: flex; justify-content: space-between; align-items: center; }
+        .btn-primary { background: var(--primary); color: white; border: none; padding: 16px; border-radius: 16px; font-weight: bold; width: 100%; cursor: pointer; }
+        
+        .plan-box { background: #f3efff; padding: 15px; border-radius: 18px; margin-bottom: 12px; border: 1px solid #e1d5ff; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
         .price-chip { background: var(--primary); color: white; padding: 6px 12px; border-radius: 10px; font-weight: bold; font-size: 13px; }
+        .sub-promo { background: linear-gradient(135deg, #ffd700, #ffae00); padding: 18px; border-radius: 20px; text-align: center; color: #333; font-weight: bold; margin: 20px 12px; border: 2px dashed #333; cursor: pointer; }
 
-        /* --- REPORTS & LOCK --- */
-        .report-item { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px dashed #eee; font-size: 14px; }
+        .report-item { display: flex; justify-content: space-between; padding: 14px 0; border-bottom: 1px dashed #eee; font-size: 14px; }
         .grand-total-card { background: var(--primary); color: white; padding: 20px; border-radius: 20px; text-align: center; margin-top: 15px; }
-        .sub-promo { background: linear-gradient(135deg, #ffd700, #ffae00); padding: 15px; border-radius: 16px; text-align: center; color: #333; font-weight: bold; margin-top: 15px; border: 2px dashed #333; }
 
-        /* --- MODAL --- */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 1000; display: none; align-items: flex-end; }
         .modal-overlay.show { display: flex; }
-        .bottom-sheet { background: white; width: 100%; border-radius: 32px 32px 0 0; padding: 25px; animation: slideUp 0.3s ease-out; max-height: 80vh; overflow-y: auto; }
-        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        .bottom-sheet { background: white; width: 100%; border-radius: 32px 32px 0 0; padding: 25px; animation: slideUp 0.3s; max-height: 85vh; overflow-y: auto; }
+        @keyframes slideUp { from { transform: translateY(100%); } }
         .chip-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
         .chip { padding: 12px; border-radius: 12px; border: 1px solid #ddd; text-align: center; font-size: 13px; font-weight: 600; cursor: pointer; background: white; }
         .chip.active { background: var(--primary); color: white; border: none; }
-        
         .hidden { display: none !important; }
         #toast { position:fixed; bottom:-100px; left:50%; transform:translateX(-50%); background:#322f35; color:white; padding:14px 24px; border-radius:12px; transition:0.4s; z-index:10000; }
     </style>
 </head>
 <body>
 
-    <!-- SPASH SCREEN -->
+    <!-- CENTERED SPLASH SCREEN -->
     <div id="splash">
-        <div class="splash-mid">
-            <span class="material-icons-round splash-icon">task_alt</span>
-            <h2 style="letter-spacing: 2px; font-weight: 700; margin-top: 15px;">DUTY TRACKER PRO</h2>
+        <div class="splash-content">
+            <img src="https://i.ibb.co/k2QG26wB/20251218-184702.png" class="splash-logo" alt="Logo">
+            <h2 style="letter-spacing: 2px; font-weight: 700;">DUTY TRACKER PRO</h2>
             <div class="loader-ring"></div>
         </div>
         <div class="splash-footer">
             <div style="font-size: 13px; opacity: 0.8;">Developed By</div>
-            <div class="nitai-studio">Nitai Studio</div>
-            <div style="margin-top:10px; font-size:12px;">Made in India <img src="https://flagcdn.com/w40/in.png" class="flag-img"></div>
+            <div class="nitai-studio">NITAI STUDIO</div>
+            <div style="margin-top:10px; font-size:12px;">Made in India <img src="https://flagcdn.com/w40/in.png" style="width:22px; vertical-align:middle; animation: flagWave 2.5s infinite; border-radius:2px; margin-left:5px;"></div>
         </div>
     </div>
 
     <!-- LOCK SCREEN (HARD WALL) -->
     <div id="lock-screen">
-        <div class="lock-card">
+        <div class="card" style="background: linear-gradient(135deg, #21005d, #6750a4); color: white; text-align:center;">
             <span class="material-icons-round" style="font-size: 70px;">lock_clock</span>
             <h2 style="margin: 20px 0;">Trial Expired</h2>
-            <p style="margin-bottom: 30px; opacity: 0.9;">Subscribe to continue tracking your duty records.</p>
+            <p style="opacity: 0.9;">Subscribe to continue tracking your duty records.</p>
         </div>
-        <div style="margin-top: 25px;">
+        <div style="padding: 15px;">
             <div class="plan-box" onclick="billing.buy('sub_monthly')">
-                <div><b>Monthly Pass</b><p style="font-size:11px;">30 Days Unlimited</p></div>
-                <div class="price-chip">₹5 / $0.49</div>
+                <div><b>Monthly Pass</b><p style="font-size:11px;">₹5 / $0.49</p></div>
+                <div class="price-chip">BUY</div>
             </div>
             <div class="plan-box" onclick="billing.buy('sub_yearly')" style="background:#fff3e0; border-color:#ffd700;">
-                <div><b>Yearly Pass</b><p style="font-size:11px;">365 Days Unlimited</p></div>
-                <div class="price-chip" style="background:#ffd700; color:#333;">₹40 / $4.99</div>
+                <div><b>Yearly Pass</b><p style="font-size:11px;">₹40 / $4.99</p></div>
+                <div class="price-chip" style="background:#ffd700; color:#333;">BUY</div>
             </div>
         </div>
-        <button onclick="app.logout()" style="background:none; border:none; color:red; margin-top: 20px; font-weight:bold;">LOGOUT ACCOUNT</button>
+        <button onclick="app.logout()" style="background:none; border:none; color:red; margin-top: 10px; font-weight:bold; width:100%;">LOGOUT ACCOUNT</button>
     </div>
 
-    <!-- AUTH SCREEN (MANDATORY) -->
-    <div id="auth-screen" class="page" style="transform:none; display:none; align-items:center; justify-content:center;">
+    <!-- AUTH SCREEN -->
+    <div id="auth-screen">
         <div class="card" style="width: 90%; max-width: 400px; text-align: center;">
-            <h2 style="color: var(--primary); margin-bottom: 8px;">Welcome</h2>
+            <h2 style="color: var(--primary); margin-bottom: 8px;">Login</h2>
             <p style="color: var(--outline); margin-bottom: 25px;">Enter mobile number to sync your records</p>
-            <input type="number" id="auth-phone" placeholder="Mobile Number" style="width:100%; padding:18px; border-radius:16px; border:1px solid #ddd; text-align:center; font-size:18px;">
+            <input type="number" id="auth-phone" placeholder="01XXXXXXXXX" style="width:100%; padding:18px; border-radius:16px; border:1px solid #ddd; text-align:center; font-size:18px;">
             <button class="btn-primary" style="margin-top: 20px;" onclick="app.login()">PROCEED TO APP</button>
         </div>
     </div>
@@ -154,30 +134,29 @@
         <header>
             <div class="app-bar">
                 <span class="material-icons-round nav-icon" onclick="ui.togglePage('settings', true)">menu</span>
-                <span class="app-title">Duty Tracker Pro</span>
-                <span class="material-icons-round nav-icon" onclick="reports.open()">analytics</span>
+                <span style="font-weight: 700; font-size: 19px;">Duty Tracker Pro</span>
+                <span class="material-icons-round nav-icon" style="background:#eaddff; padding:8px; border-radius:12px;" onclick="reports.open()">analytics</span>
             </div>
             <div class="month-selector">
                 <span class="material-icons-round nav-icon" onclick="cal.move(-1)">chevron_left</span>
-                <span id="month-txt" style="font-weight: 600;"></span>
+                <span id="month-txt" style="font-weight: 700;"></span>
                 <span class="material-icons-round nav-icon" onclick="cal.move(1)">chevron_right</span>
             </div>
         </header>
         <div id="calendar-grid"></div>
     </div>
 
-    <!-- SETTINGS PAGE (PLANS ADDED) -->
+    <!-- SETTINGS PAGE -->
     <div id="settings" class="page">
         <div style="padding: 15px; display: flex; align-items: center; gap: 15px; background: white; border-bottom: 1px solid #eee;">
             <span class="material-icons-round nav-icon" onclick="ui.togglePage('settings', false)">arrow_back</span>
             <h3 style="font-weight: 700;">Account & Settings</h3>
         </div>
-        <div style="overflow-y: auto;">
-            <div class="card" style="background: var(--primary); color: white; margin-bottom: 5px;">
+        <div style="overflow-y: auto; padding-bottom:30px;">
+            <div class="card" style="background: var(--primary); color: white; margin-bottom:5px;">
                 <h3 id="prem-status-set">Free Trial Active</h3>
-                <p id="prem-expiry-set" style="font-size: 13px; opacity: 0.9;">3 days remaining</p>
+                <p id="prem-expiry-set" style="font-size: 13px; opacity: 0.9; margin-top:5px;">3 days remaining</p>
             </div>
-            
             <div class="card">
                 <h4 style="margin-bottom:12px; color:var(--primary);">Renew Subscription</h4>
                 <div class="plan-box" onclick="billing.buy('sub_monthly')">
@@ -189,32 +168,31 @@
                     <div class="price-chip" style="background:#ffd700; color:#333;">BUY</div>
                 </div>
             </div>
-
             <div class="card">
-                <label style="font-size:12px; font-weight:bold; color:var(--outline);">Currency</label>
+                <label style="font-size:12px; font-weight:bold;">Currency</label>
                 <select id="set-currency" onchange="settings.save()" style="width:100%; padding:14px; border-radius:12px; border:1px solid #ddd; margin-bottom:15px;">
                     <option value="₹">₹ INR</option><option value="$">$ USD</option><option value="৳">৳ BDT</option>
                 </select>
-                <label style="font-size:12px; font-weight:bold; color:var(--outline);">Daily Salary</label>
+                <label style="font-size:12px; font-weight:bold;">Daily Salary</label>
                 <input type="number" id="set-salary" onchange="settings.save()" style="width:100%; padding:14px; border-radius:12px; border:1px solid #ddd; margin-bottom:15px;">
-                <label style="font-size:12px; font-weight:bold; color:var(--outline);">OT Rate (Per Hr)</label>
+                <label style="font-size:12px; font-weight:bold;">OT Rate</label>
                 <input type="number" id="set-ot-rate" onchange="settings.save()" style="width:100%; padding:14px; border-radius:12px; border:1px solid #ddd;">
                 
                 <div style="margin-top:20px; border-top:1px solid #eee; padding-top:15px;">
-                    <p style="font-size:12px; color:#666; cursor:pointer;" onclick="ui.showLegal('Privacy Policy')">Privacy Policy</p>
-                    <p style="font-size:12px; color:#666; cursor:pointer; margin-top:8px;" onclick="ui.showLegal('Refund Policy')">Refund Policy</p>
-                    <p style="font-size:12px; color:#666; cursor:pointer; margin-top:8px;" onclick="ui.showLegal('Disclaimer')">Disclaimer</p>
+                    <p onclick="ui.showLegal('Privacy Policy')" style="font-size:12px; color:#666; margin-bottom:10px; cursor:pointer;">Privacy Policy</p>
+                    <p onclick="ui.showLegal('Refund Policy')" style="font-size:12px; color:#666; margin-bottom:10px; cursor:pointer;">Refund Policy</p>
+                    <p onclick="ui.showLegal('Disclaimer')" style="font-size:12px; color:#666; cursor:pointer;">Disclaimer</p>
                 </div>
-                <button class="btn-primary" style="background:#f44336; margin-top:30px;" onclick="app.logout()">Logout Account</button>
+                <button class="btn-primary" style="background:#f44336; margin-top:30px;" onclick="app.logout()">Logout</button>
             </div>
         </div>
     </div>
 
-    <!-- REPORTS PAGE (FULL DETAILS + BANNER) -->
+    <!-- REPORTS PAGE -->
     <div id="reports" class="page">
         <div style="padding: 15px; display: flex; align-items: center; gap: 15px; background: white; border-bottom: 1px solid #eee;">
             <span class="material-icons-round nav-icon" onclick="ui.togglePage('reports', false)">arrow_back</span>
-            <h3 style="font-weight: 700;">Duty Report</h3>
+            <h3 style="font-weight: 700;">Earnings Report</h3>
         </div>
         <div style="overflow-y: auto;">
             <div class="card">
@@ -222,29 +200,19 @@
                     <div style="flex:1"><small>From</small><input type="date" id="r-start" style="width:100%; padding:12px; border-radius:12px; border:1px solid #ddd;"></div>
                     <div style="flex:1"><small>To</small><input type="date" id="r-end" style="width:100%; padding:12px; border-radius:12px; border:1px solid #ddd;"></div>
                 </div>
-                <button class="btn-primary" onclick="reports.gen()">CALCULATE NOW</button>
+                <button class="btn-primary" onclick="reports.gen()">CALCULATE REPORT</button>
             </div>
             <div id="r-out" style="padding: 0 12px;"></div>
-            
-            <div id="sub-banner" class="sub-promo" onclick="ui.togglePage('settings', true); ui.togglePage('reports', false);">
-                FREE TRIAL ACTIVE! 🎁<br>Subscribe now for full enjoyment & unlock everything!
+            <div id="promo-box" class="sub-promo" onclick="ui.goToSubscribe()">
+                FREE TRIAL ACTIVE! 🎁<br>Subscribe now for full access & premium features!
             </div>
-        </div>
-    </div>
-
-    <!-- LEGAL TEXT MODAL -->
-    <div id="legal-modal" class="modal-overlay" onclick="if(event.target===this) this.classList.remove('show')">
-        <div class="bottom-sheet">
-            <h3 id="legal-title" style="margin-bottom:15px; color:var(--primary);">Legal</h3>
-            <div id="legal-body" style="font-size:13px; color:#555; line-height:1.6; max-height:60vh; overflow-y:auto;"></div>
-            <button class="btn-primary" style="margin-top:20px;" onclick="document.getElementById('legal-modal').classList.remove('show')">CLOSE</button>
         </div>
     </div>
 
     <!-- ENTRY MODAL -->
     <div id="modal" class="modal-overlay" onclick="if(event.target===this) ui.closeModal()">
         <div class="bottom-sheet">
-            <h3 id="modal-date" style="margin-bottom: 20px; text-align: center; color: var(--primary);">Duty Status</h3>
+            <h3 id="modal-date" style="margin-bottom: 20px; text-align: center; color: var(--primary);">Update Duty</h3>
             <div class="chip-grid">
                 <div class="chip" data-t="Present" onclick="data.setType('Present', this)">Present</div>
                 <div class="chip" data-t="Leave" onclick="data.setType('Leave', this)">Leave</div>
@@ -257,23 +225,22 @@
                 <input type="number" id="inp-late" placeholder="Late Min" style="flex:1; padding:14px; border-radius:12px; border:1px solid #ddd;">
             </div>
             <button class="btn-primary" onclick="data.save()">SAVE DATA</button>
-            <button onclick="data.clear()" style="width:100%; padding:10px; border:none; background:none; color:red; margin-top:5px;">Clear Entry</button>
+            <button onclick="data.clear()" style="width:100%; padding:10px; border:none; background:none; color:red; margin-top:5px; font-weight:bold;">Clear Entry</button>
+        </div>
+    </div>
+
+    <!-- LEGAL MODAL -->
+    <div id="legal-modal" class="modal-overlay" onclick="if(event.target===this) this.classList.remove('show')">
+        <div class="bottom-sheet">
+            <h3 id="legal-title" style="margin-bottom:15px; color:var(--primary);">Legal</h3>
+            <div id="legal-body" style="font-size:13px; color:#555; line-height:1.6; max-height:60vh; overflow-y:auto;"></div>
+            <button class="btn-primary" style="margin-top:20px;" onclick="document.getElementById('legal-modal').classList.remove('show')">CLOSE</button>
         </div>
     </div>
 
     <div id="toast"></div>
 
     <script>
-        // --- PWA SINGLE FILE MASTER ---
-        (function(){
-            const manifest = { "name": "Duty Tracker Pro", "short_name": "DutyPro", "start_url": ".", "display": "standalone", "background_color": "#6750a4", "theme_color": "#6750a4", "icons": [{"src": "https://cdn-icons-png.flaticon.com/512/2618/2618254.png", "sizes": "512x512", "type": "image/png"}] };
-            const mURL = URL.createObjectURL(new Blob([JSON.stringify(manifest)], {type: 'application/json'}));
-            document.getElementById('pwa-manifest').setAttribute('href', mURL);
-            const swCode = `const CACHE='v1'; self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE))); self.addEventListener('fetch',e=>e.respondWith(fetch(e.request).catch(()=>caches.match(e.request))));`;
-            const swURL = URL.createObjectURL(new Blob([swCode], {type: 'text/javascript'}));
-            if ('serviceWorker' in navigator) navigator.serviceWorker.register(swURL);
-        })();
-
         // --- FIREBASE CONFIG ---
         const firebaseConfig = {
           apiKey: "AIzaSyDxqq2PBqrtkTsygyMcIDOvZyx2_-x4QRk",
@@ -290,13 +257,6 @@
         const s = { uid: null, date: new Date(), data: {}, conf: { cur: '₹', sal: 0, otr: 0 }, expiry: 0, regDate: 0 };
         let sel = { d: null, t: null };
 
-        // PWA Auto Prompt
-        let deferredPrompt;
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault(); deferredPrompt = e;
-            setTimeout(() => { if(deferredPrompt) deferredPrompt.prompt(); }, 2000);
-        });
-
         window.onload = () => {
             setTimeout(() => {
                 const id = localStorage.getItem('dt_id');
@@ -312,7 +272,7 @@
             login: () => {
                 const phone = document.getElementById('auth-phone').value.trim();
                 if(phone.length >= 8) { localStorage.setItem('dt_id', phone); app.start(phone); }
-                else ui.toast("Enter a valid mobile number");
+                else ui.toast("Valid mobile number required");
             },
             start: (id) => {
                 s.uid = id;
@@ -347,18 +307,12 @@
             service: null,
             init: async () => { if ('getDigitalGoodsService' in window) { try { billing.service = await window.getDigitalGoodsService('https://play.google.com/billing'); } catch(e){} } },
             updateUI: (isPrem, isTrial, trialLimit) => {
-                const st = document.getElementById('prem-status-set'), ex = document.getElementById('prem-expiry-set');
-                const banner = document.getElementById('sub-banner');
-                if(isPrem) {
-                    st.innerText = "Premium ⭐"; ex.innerText = "Active: " + new Date(s.expiry).toLocaleDateString();
-                    if(banner) banner.classList.add('hidden');
-                } else if(isTrial) {
-                    const r = Math.ceil((trialLimit-(Date.now()-s.regDate))/(1000*60*60*24));
-                    st.innerText = "Trial Active"; ex.innerText = r + " days remaining";
-                }
+                const st = document.getElementById('prem-status-set'), ex = document.getElementById('prem-expiry-set'), promo = document.getElementById('promo-box');
+                if(isPrem) { st.innerText = "Premium Member ⭐"; ex.innerText = "Expiry: " + new Date(s.expiry).toLocaleDateString(); promo.classList.add('hidden'); }
+                else if(isTrial) { const r = Math.ceil((trialLimit-(Date.now()-s.regDate))/(1000*60*60*24)); st.innerText = "Trial Active"; ex.innerText = r + " days remaining"; if(promo) promo.classList.remove('hidden'); }
             },
             buy: async (sku) => {
-                if (!billing.service) return ui.toast("Purchase through Play Store App");
+                if (!billing.service) return ui.toast("Play Store app required for purchase");
                 try {
                     const req = new PaymentRequest([{ supportedMethods: 'https://play.google.com/billing', data: { sku: sku } }]);
                     const res = await req.show();
@@ -366,9 +320,9 @@
                         await res.complete('success');
                         const add = (sku === 'sub_yearly' ? 365 : 30) * 24 * 60 * 60 * 1000;
                         db.ref(`u/${s.uid}/expiry`).set(Math.max(Date.now(), s.expiry) + add);
-                        ui.toast("Subscription Activated!");
+                        ui.toast("Subscription Successful!");
                     }
-                } catch(e) { ui.toast("Cancelled"); }
+                } catch(e) { ui.toast("Payment Cancelled"); }
             }
         };
 
@@ -425,15 +379,15 @@
                     const e = s.data[d.toISOString().split('T')[0]];
                     if(e) { if(e.t==='Present') pres++; if(e.t==='Holiday') hol++; if(e.t==='Sick') sick++; otHrs += (e.ot||0); late += (e.lt||0); }
                 }
-                const cur = s.conf.cur, paid = pres + hol + sick, base = paid * s.conf.sal, otE = otHrs * s.conf.otr;
+                const cur = s.conf.cur, paid = pres+hol+sick, base = paid*s.conf.sal, otE = otHrs*s.conf.otr;
                 document.getElementById('r-out').innerHTML = `
                 <div class="card">
                     <div class="report-item"><span>Paid Days (P+H+S)</span><b>${paid}</b></div>
                     <div class="report-item"><span>Total OT Hours</span><b>${otHrs}</b></div>
-                    <div class="report-item"><span>Total Late Time</span><b>${late} Min</b></div>
+                    <div class="report-item"><span>Total Late Time</span><b>${late} m</b></div>
                     <div class="report-item" style="margin-top:10px;"><span>Base Salary</span><b>${cur}${base.toFixed(2)}</b></div>
                     <div class="report-item"><span>OT Earnings</span><b>${cur}${otE.toFixed(2)}</b></div>
-                    <div class="grand-total-card"><h3>${cur}${(base+otE).toFixed(2)}</h3><small>Total Earnings</small></div>
+                    <div class="grand-total-card"><h2>${cur}${(base+otE).toFixed(2)}</h2><small>Total Earnings</small></div>
                 </div>`;
             }
         };
@@ -448,15 +402,16 @@
             },
             closeModal: () => document.getElementById('modal').classList.remove('show'),
             togglePage: (id,o) => document.getElementById(id).classList[o?'add':'remove']('open'),
+            goToSubscribe: () => { ui.togglePage('reports', false); ui.togglePage('settings', true); },
             toast: (m) => { const t=document.getElementById('toast'); t.innerText=m; t.style.bottom='30px'; setTimeout(()=>t.style.bottom='-100px', 2500); },
             showLegal: (type) => {
                 const modal = document.getElementById('legal-modal');
                 const title = document.getElementById('legal-title');
                 const body = document.getElementById('legal-body');
                 title.innerText = type;
-                if(type === 'Privacy Policy') body.innerText = "Privacy Policy: Duty Tracker Pro values your privacy. We store your duty records in Firebase to ensure synchronization across devices. Your mobile number is used as a unique ID for your data. We do not sell or share your data with third parties. For support, contact nitai.grp00@gmail.com.";
-                if(type === 'Refund Policy') body.innerText = "Refund Policy: Our subscription plans (Monthly/Yearly) provide instant access to premium features. Since these are digital goods, refunds are typically not provided once the access is granted via Google Play. However, you can manage your subscription at any time through the Google Play Store settings. For technical issues, contact nitai.grp00@gmail.com.";
-                if(type === 'Disclaimer') body.innerText = "Disclaimer: Duty Tracker Pro is a utility tool for tracking personal duty and salary estimates. The salary calculations are based on the user-provided rates and should only be used as an estimate. We are not responsible for any financial discrepancies between the app and your official records. Use of Google Play Billing ensures secure transactions.";
+                if(type === 'Privacy Policy') body.innerText = "Privacy Policy: Duty Tracker Pro values your privacy. We store your duty records in Firebase for synchronization. Your mobile number is used as a unique ID. Contact: nitai.grp00@gmail.com";
+                if(type === 'Refund Policy') body.innerText = "Refund Policy: Since we provide instant access to digital premium features, refunds are typically not provided once a subscription is activated via Google Play. Contact: nitai.grp00@gmail.com";
+                if(type === 'Disclaimer') body.innerText = "Disclaimer: This app is for estimation only. Final salary depends on your employer's official records.";
                 modal.classList.add('show');
             }
         };
