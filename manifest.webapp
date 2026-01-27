@@ -1,19 +1,31 @@
 {
-  "name": "Duty Tracker Pro",
-  "description": "Daily Duty Tracker Web App",
-  "version": "1.0",
+  "version": "1.0.0",
+  "name": "Duty Tracker",
+  "description": "Track your daily duties",
+  "subtitle": "Track your daily duties",
   "launch_path": "/dutyTracker-pro/index.html",
   "type": "web",
-  "default_locale": "en",
-
-  "icons": {
-    "56": "/dutyTracker-pro/icons/icon-56.png",
-    "84": "/dutyTracker-pro/icons/icon-84.png",
-    "112": "/dutyTracker-pro/icons/icon-112.png"
+  "default_locale": "en-US",
+  "locales": {
+    "en-US": {
+      "name": "Duty Tracker",
+      "description": "Track your daily duties",
+      "subtitle": "Track your daily duties"
+    }
   },
-
+  "icons": {
+    "56": "https://nitaistudio.github.io/dutyTracker-pro/icons/icon-56.png",
+    "84": "https://nitaistudio.github.io/dutyTracker-pro/icons/icon-84.png",
+    "112": "https://nitaistudio.github.io/dutyTracker-pro/icons/icon-112.png"
+  },
   "developer": {
     "name": "Nitai Studio",
     "url": "https://nitaistudio.github.io"
-  }
+  },
+  "installs_allowed_from": [
+    "*"
+  ],
+  "origin": "https://nitaistudio.github.io",
+  "cursor": true,
+  "fullscreen": true
 }
