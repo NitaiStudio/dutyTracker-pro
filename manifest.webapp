@@ -5,11 +5,13 @@
   "launch_path": "/dutyTracker-pro/index.html",
   "type": "web",
   "default_locale": "en",
+
   "icons": {
     "56": "/dutyTracker-pro/icons/icon-56.png",
     "84": "/dutyTracker-pro/icons/icon-84.png",
     "112": "/dutyTracker-pro/icons/icon-112.png"
   },
+
   "developer": {
     "name": "Nitai Studio",
     "url": "https://nitaistudio.github.io"
