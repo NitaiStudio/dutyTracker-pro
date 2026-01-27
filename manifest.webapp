@@ -9,7 +9,7 @@
     "en-US": {
       "name": "Duty Tracker Pro",
       "description": "Daily Duty Tracker Web App",
-      "subtitle": "Track Daily Duties" 
+      "subtitle": "Track Daily Duties"
     }
   },
   "icons": {
@@ -24,6 +24,7 @@
   "installs_allowed_from": [
     "*"
   ],
+  "origin": "https://nitaistudio.github.io",
   "cursor": true,
   "fullscreen": true
 }
