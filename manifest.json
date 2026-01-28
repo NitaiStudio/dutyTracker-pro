@@ -1,28 +1,20 @@
 {
-  "name": "Duty Tracker Pro",
-  "short_name": "DutyPro",
-  "description": "Professional and intuitive Duty and Salary Tracking application. Manage your attendance, overtime, and calculated earnings with ease. Developed by Nitai Studio for global professionals.",
-  "start_url": "./index.html",
-  "display": "standalone",
-  "background_color": "#fef7ff",
-  "theme_color": "#6750a4",
-  "orientation": "portrait",
-  "lang": "en-US",
-  "scope": "./",
-  "id": "com.nitaistudio.dutytrackerprofree",
-  "categories": ["business", "finance", "productivity"],
-  "icons": [
-    {
-      "src": "https://i.ibb.co/k2QG26wB/20251218-184702.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "https://i.ibb.co/k2QG26wB/20251218-184702.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
-    }
-  ]
+  "name": "DutyTracker Pro",
+  "display_name": "DutyTracker Pro",
+  "version": "1.0.0",
+  "subtitle": "Track Daily Duties",
+  "description": "Track your daily duties efficiently and stay productive.",
+  "launch_path": "/dutyTracker-pro/",
+  "type": "web",
+  "icons": {
+    "56": "https://nitaistudio.github.io/dutyTracker-pro/icons/icon-56.png",
+    "84": "https://nitaistudio.github.io/dutyTracker-pro/icons/icon-84.png",
+    "112": "https://nitaistudio.github.io/dutyTracker-pro/icons/icon-112.png"
+  },
+  "developer": {
+    "name": "Nitai Studio",
+    "url": "https://github.com/NitaiStudio"
+  },
+  "default_locale": "en",
+  "origin": "https://nitaistudio.github.io"
 }
