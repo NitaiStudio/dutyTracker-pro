@@ -20,11 +20,9 @@
   },
   "developer": {
     "name": "Nitai Studio",
-    "url": "https://nitaistudio.github.io"
+    "url": "https://github.com/NitaiStudio"
   },
-  "installs_allowed_from": [
-    "*"
-  ],
+  "installs_allowed_from": ["*"],
   "origin": "https://nitaistudio.github.io",
   "cursor": true,
   "fullscreen": true
